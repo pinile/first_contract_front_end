@@ -3,7 +3,7 @@ import App from './App.tsx'
 import './index.css'
 import { TonConnectUIProvider } from '@tonconnect/ui-react'
 
-const manifestUrl = 'https://pinile.github.io/counter-front-end/public/manifest.json'
+const manifestUrl = 'https://pinile.github.io/counter-front-end/manifest.json'
 
 ReactDOM.createRoot(document.getElementById('root') as HTMLElement).render(
     <TonConnectUIProvider manifestUrl={manifestUrl}>
