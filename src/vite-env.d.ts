@@ -1,1 +1,1 @@
-/// <reference types="vite/client" /> 67
+/// <reference types="vite/client" />
