@@ -48,10 +48,10 @@ export function useMainContract() {
     contract_balance: balance,
     ...contractData,
     sendIncrement: async () => {
-      return mainContract?.sendIncrement(sender, toNano("1"), 1);
+      return mainContract?.sendIncrement(sender, toNano("0.01"), 1);
     },
     sendDeposit: async () => {
-      return mainContract?.sendDeposit(sender, toNano("1"));
+      return mainContract?.sendDeposit(sender, toNano("0.01"));
     },
     sendWithdrawal: async () => {
       return mainContract?.sendWithdrawalRequest(sender, toNano("0.05"), toNano("0.2"));

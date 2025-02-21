@@ -57,11 +57,11 @@ function App() {
             <h3>Contract actions: </h3>
             {connected ? (
                 <>
-                  <p>Increment contract balance by 1 TON, with 0.05 TON as a comission</p>
+                  <p>Increment contract balance by 0.01 TON, with 0.05 TON as a comission</p>
                   <button onClick={sendIncrement}>Increment</button>
                   <hr />
 
-                  <p>Deposit contract balance by 1 TON</p>
+                  <p>Deposit contract balance by 0.01 TON</p>
                   <button onClick={sendDeposit}>Deposit</button>
                   <hr />
 
