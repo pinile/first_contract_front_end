@@ -27,7 +27,10 @@ function App() {
         <TonConnectButton/>
         <div>
           <div className='Card'>
-            <b>{WebApp.platform}</b>
+            <b>{WebApp.platform}
+              <hr/>
+            </b>
+
             <b>Our contract Address</b>
             <div className='Hint'>{contract_address?.slice(0, 30) + "..."}</div>
             <b>Our contract Balance</b>
@@ -63,18 +66,17 @@ function App() {
                   </>
               )}
 
-              <div className='Card'>
+              <>
                 <b>Counter Value:</b>
                 <div>{counter_value ?? "Loading..."}</div>
-
-                <a
-                    onClick={() => {
-                      showAlert();
-                    }}
-                >
-                  Show Alert
-                </a>
-              </div>
+              </>
+              <a
+                  onClick={() => {
+                    showAlert();
+                  }}
+              >
+                Show Alert
+              </a>
             </div>
             <div>
               <h3>Contract actions: </h3>
