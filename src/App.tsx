@@ -63,10 +63,18 @@ function App() {
                   </>
               )}
 
-              <>
+              <div className='Card'>
                 <b>Counter Value:</b>
                 <div>{counter_value ?? "Loading..."}</div>
-              </>
+
+                <a
+                    onClick={() => {
+                      showAlert();
+                    }}
+                >
+                  Show Alert
+                </a>
+              </div>
             </div>
             <div>
               <h3>Contract actions: </h3>
