@@ -17,6 +17,7 @@ function App() {
     sendDeposit,
     sendWithdrawal,
   } = useMainContract();
+
   const {tonConnectUI} = useTonConnect();
 
   const [connected, setConnected] = useState<boolean>(false);
