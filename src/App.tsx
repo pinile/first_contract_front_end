@@ -3,6 +3,7 @@ import {TonConnectButton} from "@tonconnect/ui-react";
 import {useMainContract} from "./hooks/useMainContract";
 import {useTonConnect} from "./hooks/useTonConnect";
 import {fromNano} from "@ton/ton";
+import {useCallback, useEffect, useState} from "react";
 import WebApp from "@twa-dev/sdk";
 
 function App() {
@@ -16,88 +17,155 @@ function App() {
     sendDeposit,
     sendWithdrawal,
   } = useMainContract();
-  const {connected} = useTonConnect();
+  const {tonConnectUI} = useTonConnect();
 
-  const showAlert = () => {
-    WebApp.showAlert("Hey there!");
-  };
+  const [connected, setConnected] = useState<boolean>(false);
+  const [platform, setPlatform] = useState<string | null>(null);
+  const [code, setCode] = useState<string | null>(null);
+
+  const userPlatform = useCallback(() => {
+    setPlatform(WebApp.platform === "unknown" ? null : WebApp.platform);
+  }, []);
+
+  const showPlatformInAlert = useCallback(() => {
+    if (platform) {
+      WebApp.showAlert(platform);
+    }
+  }, [platform]);
+
+  const softHaptic = useCallback(() => {
+    WebApp.HapticFeedback.impactOccurred("soft");
+  }, []);
+
+  const successHaptic = useCallback(() => {
+    WebApp.HapticFeedback.notificationOccurred("success");
+  }, []);
+
+  const openScan = useCallback(() => {
+    WebApp.showScanQrPopup({text: "Scan some QR code"}, (code) => {
+      setCode(code);
+      WebApp.closeScanQrPopup();
+    });
+  }, []);
+
+  useEffect(() => {
+    WebApp.expand();
+    userPlatform();
+    setConnected(tonConnectUI.connected);
+
+    tonConnectUI.onStatusChange((status) => {
+      setConnected(status !== null);
+    });
+  }, [tonConnectUI, userPlatform]);
 
   return (
       <div>
-        <TonConnectButton/>
-        <div>
-          <div className='Card'>
-            <b>{WebApp.platform}
-              <hr/>
-            </b>
-
-            <b>Our contract Address</b>
-            <div className='Hint'>{contract_address?.slice(0, 30) + "..."}</div>
-            <b>Our contract Balance</b>
+        <div className="container">
+          <div className="button-container">
+            <h3>Contract Data:</h3>
+            <TonConnectButton />
+          </div>
+          <div className="data-container">
+            <b>Our contract Address:</b>
+            <p>{contract_address}</p>
+            <hr />
+            <b>Our contract Owner:</b>
+            <p>{owner_address?.toString()}</p>
+            <hr />
             {contract_balance && (
-                <div className='Hint'>{fromNano(contract_balance)}</div>
+                <>
+                  <b>Our contract Balance:</b>
+                  <p>{fromNano(contract_balance)}</p>
+                  <hr />
+                </>
             )}
+            {recent_sender && (
+                <>
+                  <b>Recent sender:</b>
+                  <p>{recent_sender.toString()}</p>
+                  <hr />
+                </>
+            )}
+            <div>
+              <b>Counter Value:</b>
+              <p>{counter_value ?? "Loading..."}</p>
+              <hr />
+            </div>
           </div>
 
-          <div className="container">
-            <div>
-              <h3>Contract Data:</h3>
-              <b>Our contract Address:</b>
-              <div className="Hint">{contract_address}</div>
-              <hr/>
-
-              <b>Our contract Owner:</b>
-              <div className="Hint">{owner_address?.toString()}</div>
-              <hr/>
-
-              {contract_balance && (
-                  <>
-                    <b>Our contract Balance:</b>
-                    <div className="Hint">{fromNano(contract_balance)}</div>
-                    <hr/>
-                  </>
-              )}
-
-              {recent_sender && (
-                  <>
-                    <b> Recent sender:</b>
-                    <div className="Hint">{recent_sender.toString()}</div>
-                    <hr/>
-                  </>
-              )}
-
-              <>
-                <b>Counter Value:</b>
-                <div>{counter_value ?? "Loading..."}</div>
-              </>
-              <a
-                  onClick={() => {
-                    showAlert();
-                  }}
-              >
-                Show Alert
-              </a>
+          <h3>App actions: </h3>
+          <div className="data-container">
+            {platform && (
+                <>
+                  <div className="button-container">
+                    <b>Show platform</b>
+                    <button onClick={showPlatformInAlert}>Show</button>
+                  </div>
+                  <hr />
+                </>
+            )}
+            <div className="button-container">
+              <b>Show scanner</b>
+              <button onClick={openScan}>Start</button>
             </div>
-            <div>
-              <h3>Contract actions: </h3>
-              {connected ? (
-                  <>
-                    <p>Increment contract balance by 0.01 TON, with 0.05 TON as a comission</p>
-                    <button onClick={sendIncrement}>Increment</button>
-                    <hr/>
+            <hr />
 
-                    <p>Deposit contract balance by 0.01 TON</p>
-                    <button onClick={sendDeposit}>Deposit</button>
-                    <hr/>
+            {code && (
+                <div>
+                  <b>Scanned code</b>
+                  <p>{code}</p>
+                </div>
+            )}
 
-                    <p>Withdrawal from contract balance by 0.2 TON</p>
-                    <button onClick={sendWithdrawal}>Withdrawal</button>
-                    <hr/>
-                  </>
-              ) : (
-                  <p>Connect wallet to start action</p>
-              )}
+            <div className="button-container">
+              <b>Soft haptic</b>
+              <button onClick={softHaptic}>Start</button>
             </div>
+            <hr />
+
+            <div className="button-container">
+              <b>Success haptic</b>
+              <button onClick={successHaptic}>Start</button>
+            </div>
+          </div>
+
+          <h3>Contract actions: </h3>
+          <div className="data-container">
+            {connected ? (
+                <>
+                  <div className="button-container">
+                    <p>Increment counter by 1</p>
+                    <button onClick={sendIncrement}>Start</button>
+                  </div>
+                  <hr />
+
+                  <div className="button-container">
+                    <p>Deposit contract by 0.01 TON</p>
+                    <button onClick={sendDeposit}>Start</button>
+                  </div>
+                  <hr />
+
+                  <div className="button-container">
+                    <p>Withdrawal 1.0 TON</p>
+                    <button onClick={sendWithdrawal}>Start</button>
+                  </div>
+                </>
+            ) : (
+                <p>Connect wallet to start action</p>
+            )}
+          </div>
+          <div>
+            <a
+                href="https://testnet.tonscan.org/address/kQCKSi5Aevqu6fzQkHeTBG03FYTwo4Sx0FPe-uV5E6qzNjMI"
+                target="_blank"
+            >
+              explorer
+            </a>
+            <br />
+            <a href="https://github.com/pinile/first_contract_front_end" target="_blank">
+              github
+            </a>
+            <div>{platform}</div>
           </div>
         </div>
       </div>
