@@ -37,11 +37,11 @@
   padding: 15px;
   border-radius: 5px;
   background-color: rgb(42, 42, 42);
-  margin: 15px 0px;
+  margin: 15px 0;
 }
 
 .data-container:first-child {
-  padding-bottom: 0px;
+  padding-bottom: 0;
 }
 
 p {
@@ -56,7 +56,7 @@ hr {
 }
 
 h3 {
-  margin: 0px;
+  margin: 0;
 }
 
 .container {
