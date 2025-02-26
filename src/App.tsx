@@ -156,16 +156,18 @@ function App() {
             )}
           </div>
           <div>
+            <hr/>
             <a
                 href="https://testnet.tonscan.org/address/kQCKSi5Aevqu6fzQkHeTBG03FYTwo4Sx0FPe-uV5E6qzNjMI"
                 target="_blank"
             >
               explorer
             </a>
-            <br />
+            <br/>
             <a href="https://github.com/pinile/first_contract_front_end" target="_blank">
               github
             </a>
+            <hr/>
             <div>{platform}</div>
           </div>
         </div>
